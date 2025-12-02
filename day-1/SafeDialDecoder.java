@@ -41,17 +41,17 @@ public class SafeDialDecoder {
 				first = Integer.parseInt(String.valueOf(currentRotation.charAt(1)));
 				addition = first;
 			}
+			
+			char direction = currentRotation.charAt(0);
 
-			if(currentRotation.charAt(0) == 'L') {
-				dialPosition = Math.floorMod(dialPosition - addition, 100);
-			    	
-				if(dialPosition == 0) {
-					count++;
+			for(int j = 0; j < addition; j++) {
+				if(direction == 'L') {
+					dialPosition = (dialPosition - 1 + 100) % 100;
 				}
-			}
 
-			else {
-				dialPosition = Math.floorMod(dialPosition + addition, 100);
+				else {
+					dialPosition = (dialPosition + 1) % 100;
+				}
 
 				if(dialPosition == 0) {
 					count++;
