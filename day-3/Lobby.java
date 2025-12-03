@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Lobby {
-	public static int findTotalOutputJoltage(String[] input) {
+	public static int findTotalOutputJoltageForPartOne(String[] input) {
 		int totalJoltage = 0;
 
 		for(int i = 0; i < input.length; i++) {
@@ -41,6 +41,49 @@ public class Lobby {
 		return totalJoltage;
 	}
 	
+	public static long findTotalOutputJoltageForPartTwo(String[] input) {
+		long maxJoltage = 0L;
+
+		for(int i = 0; i < input.length; i++) {
+			String currentInput = input[i];
+			
+			int currentInputLength = currentInput.length();
+			
+			int searchStart = 0;
+			
+			String currentMaxJoltageString = "";
+			
+			for(int j = 12; j > 0; j--) {
+				int maxDigit = -1;
+
+				int searchLimit = currentInputLength - j;
+				
+				int maxIndex = searchStart;
+
+				for(int k = searchStart; k <= searchLimit; k++) {
+					int currentDigit = Integer.parseInt(String.valueOf(currentInput.charAt(k)));
+
+					if(currentDigit > maxDigit) {
+						maxDigit = currentDigit;
+						maxIndex = k;
+						
+					}
+				}
+
+				searchStart = maxIndex + 1;
+
+				currentMaxJoltageString = currentMaxJoltageString + maxDigit;	
+			}
+			
+			long currentMaxJoltageLong = Long.parseLong(currentMaxJoltageString);
+			maxJoltage += currentMaxJoltageLong;
+
+        		System.out.println(currentMaxJoltageString);
+		}
+	
+		return maxJoltage;
+	}
+						
 	public static String[] readInputFromFile(String fileName) {
 		List<String> inputList = new ArrayList<>();
 
@@ -67,8 +110,8 @@ public class Lobby {
 		// String[] input = {"987654321111111", "811111111111119", "234234234234278", "818181911112111"};
 		
 		String[] input = readInputFromFile("lobby-input.txt");
-		
-		int totalJoltage = findTotalOutputJoltage(input);
+				
+		long totalJoltage = findTotalOutputJoltageForPartTwo(input);
 		System.out.println("Total Joltage: " + totalJoltage);
 	}
 }
