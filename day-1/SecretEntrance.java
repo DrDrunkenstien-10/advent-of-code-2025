@@ -5,8 +5,8 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SafeDialDecoder {
-	public static int decodeSafeDial(String[] input) {
+public class SecretEntrance {
+	public static int findPassword(String[] input) {
 		int count = 0;
 		int dialPosition = 50;
 
@@ -85,9 +85,9 @@ public class SafeDialDecoder {
 	}
 
 	public static void main(String[] args) {
-		String[] input = readInputFromFile("safe-dial-decoder-input.txt");
+		String[] input = readInputFromFile("secret-entrance-input.txt");
 
-		int password = decodeSafeDial(input);
+		int password = findPassword(input);
 		System.out.println("Password: " + password);
 	}
 }
