@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,6 +32,66 @@ public class TrashCompactor {
 		return grandTotal;
 	}
 
+	// Part 2
+	public static long findGrandTotalForPartTwo(char[][] numbers, char[] operations) {
+		long grandTotal = 0;
+
+		int rows = numbers.length;
+		int cols = numbers[0].length;
+
+		int opIndex = operations.length - 1;
+		long blockResult = 0;
+		boolean inBlock = false;
+
+		for (int c = cols - 1; c >= 0; c--) {
+
+			boolean isBlank = true;
+			for (int r = 0; r < rows; r++) {
+				if (numbers[r][c] != ' ') {
+					isBlank = false;
+					break;
+				}
+			}
+
+			if (isBlank) {
+				if (inBlock) {
+					grandTotal += blockResult;
+					inBlock = false;
+					opIndex--;
+				}
+				continue;
+			}
+
+			if (!inBlock) {
+				char op = operations[opIndex];
+				blockResult = (op == '+') ? 0 : 1;
+				inBlock = true;
+			}
+
+			long n = 0;
+			for (int r = 0; r < rows; r++) {
+				char ch = numbers[r][c];
+				if (ch >= '0' && ch <= '9') {
+					n = n * 10 + (ch - '0');
+				}
+			}
+
+			char op = operations[opIndex];
+			if (op == '+') {
+				blockResult += n;
+			} else {
+				blockResult *= n;
+			}
+		}
+
+		if (inBlock) {
+			grandTotal += blockResult;
+		}
+
+		return grandTotal;
+	}
+
+	// Part 1
 	public static long[][] readNumbersAs2DArrayFromFile(String filePath) throws IOException {
 		List<long[]> rows = new ArrayList<>();
 
@@ -64,6 +125,31 @@ public class TrashCompactor {
 		}
 
 		return result;
+	}
+
+	// Part 2
+	public static char[][] readNumbersAs2DCharArrayFromFile(String filePath) throws IOException {
+		List<char[]> rows = new ArrayList<>();
+
+		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+
+				// Skip the operator row
+				if (line.contains("+") || line.contains("*")) {
+					continue;
+				}
+
+				rows.add(line.toCharArray());
+			}
+		}
+
+		char[][] grid = new char[rows.size()][];
+		for (int i = 0; i < rows.size(); i++) {
+			grid[i] = rows.get(i);
+		}
+
+		return grid;
 	}
 
 	public static char[] readOperationsFromFile(String filePath) throws IOException {
@@ -103,12 +189,21 @@ public class TrashCompactor {
 		 * };
 		 * 
 		 * char[] operations = { '*', '+', '*', '+' };
+		 * 
+		 * long[][] numbers = readNumbersAs2DArrayFromFile("trash-compactor-input.txt");
+		 * char[] operations = readOperationsFromFile("trash-compactor-input.txt");
+		 * 
+		 * long grandTotal = findGrandTotal(numbers, operations);
+		 * System.out.println("Grand Total: " + grandTotal);
+		 * 
+		 * char[][] numbers = readNumbersAs2DCharArrayFromFile("test-input.txt");
+		 * char[] operations = readOperationsFromFile("test-input.txt");
 		 */
 
-		long[][] numbers = readNumbersAs2DArrayFromFile("trash-compactor-input.txt");
+		char[][] numbers = readNumbersAs2DCharArrayFromFile("trash-compactor-input.txt");
 		char[] operations = readOperationsFromFile("trash-compactor-input.txt");
 
-		long grandTotal = findGrandTotal(numbers, operations);
-		System.out.println("Grand Total: " + grandTotal);
+		long grandTotal = findGrandTotalForPartTwo(numbers, operations);
+		System.out.println(grandTotal);
 	}
 }
